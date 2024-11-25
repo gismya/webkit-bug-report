@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Safari Bug Report</title>
+    <style>
+      #root {
+        background-color: #fff;
+      }
+      video {
+        display: block;
+        width: 700px;
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <video src="./video.mp4"></video>
+      <h1>Safari Bug Report</h1>
+      <p>
+        When a fullscreen element containing a video is paused on a frame with
+        text, the <strong>Live Text</strong> feature blocks input fields and
+        textareas, preventing them from being written to.
+      </p>
+      <h2>Scenarios</h2>
+      <ul>
+        <li>
+          <strong>Scenario 1:</strong> when not in fullscreen, input elements
+          work as expected for all videos.
+        </li>
+        <li>
+          <strong>Scenario 2:</strong> when in fullscreen, pausing the first
+          video causes the input elements to stop working.
+        </li>
+        <li>
+          <strong>Scenario 3:</strong> when in fullscreen, switching from the
+          first video to the second video restores functionality when play is
+          pressed and continues working even after pausing.
+        </li>
+      </ul>
+      <p>
+        Occasionally, after exiting fullscreen, the
+        <strong>Live Text</strong> feature continues to block inputs. However,
+        this behavior is inconsistent, and I have not been able to reliably
+        reproduce it.
+      </p>
+      <h2>Tested Versions</h2>
+      <ul>
+        <li>Safari Version 18.1.1 (20619.2.8.11.12)</li>
+        <li>
+          Safari Technology Preview Release 208 (Safari 18.2, WebKit
+          20621.1.5.1)
+        </li>
+      </ul>
+
+      <input type="text" placeholder="input" />
+      <textarea placeholder="textarea"></textarea>
+      <button onclick="document.getElementById('root').requestFullscreen()">
+        Fullscreen
+      </button>
+      <button onclick="document.exitFullscreen()">Exit Fullscreen</button>
+      <button onclick="playVideo()">Play</button>
+      <button onclick="pauseVideo()">Pause</button>
+      <button onclick="switchVideoSource()">Switch Video Source</button>
+    </div>
+
+    <script>
+      let currentSource = 0;
+      const videoSources = [
+        "./video.mp4",
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", // Add additional video sources as needed
+      ];
+
+      function playVideo() {
+        const videoElement = document.querySelector("video");
+        videoElement.play();
+      }
+
+      function pauseVideo() {
+        const videoElement = document.querySelector("video");
+        videoElement.pause();
+      }
+
+      function switchVideoSource() {
+        currentSource = (currentSource + 1) % videoSources.length;
+        const videoElement = document.querySelector("video");
+        videoElement.src = videoSources[currentSource];
+      }
+    </script>
+  </body>
+</html>
